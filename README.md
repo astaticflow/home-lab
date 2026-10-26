@@ -22,7 +22,7 @@ A small enterprise-style network I'm building to learn Windows/Linux administrat
 | GNS3 | n/a | Network simulation | Planned |
 
 ## Network diagram
-<img width="1012" height="555" alt="network-diagram drawio" src="https://github.com/user-attachments/assets/d60fc4ac-ad8a-4197-8752-c75390712c42" />
+<img width="4128" height="2124" alt="image" src="https://github.com/user-attachments/assets/8105bbe0-dee3-407a-bbcc-05cc9155547f" />
 
 ## What I'm practicing
 - **Active Directory:** multiple users, groups, security groups, and Group Policy
