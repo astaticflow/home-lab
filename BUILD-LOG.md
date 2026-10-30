@@ -1,6 +1,44 @@
+<!-- Template for new entries:
+
+## YYYY-MM-DD: Short title
+- Goal:
+- What I did:
+- What broke / surprised me:
+- Fix / what I learned:
+- Next:
+
+-->
+
 # Build Log
 
-Newest entries first. Each entry: what I did, what went wrong, what I learned.
+2026-10-29: Domain controller deployment (DC01)
+
+**Objective:** Establish the Active Directory forest and DNS infrastructure for corp.homelab.internal.
+
+## Actions
+
+Captured baseline snapshots of all existing VMs (FW01, DC01, WS01).
+Assigned DC01 a static address of 10.20.10.10 (outside the 10.20.10.100-200 DHCP scope), gateway 10.20.10.1.
+Installed the AD DS role and promoted DC01 to the first domain controller of a new forest, corp.homelab.internal (NetBIOS CORP), with DNS and Global Catalog.
+Took a snapshot before promotion and a post-promotion snapshot (Post-AD-promotion).
+
+## Verification
+
+Services running: ADWS, DNS, Kdc, Netlogon, NTDS.
+SYSVOL and NETLOGON shares present.
+dcdiag: Connectivity, Advertising, SysVolCheck, and NetLogons tests passed.
+nslookup resolves the internal domain locally and external names through the DNS forwarder.
+
+## Issues and resolutions
+
+Issue	Cause	Resolution
+ping 1.1.1.1 returned "transmit failed"	route print showed no default route; gateway not configured	Set the default gateway to 10.20.10.1 on the adapter
+Promotion prerequisite check failed	AD CS role was installed on the server	Removed AD CS and re-ran the wizard
+DNS delegation warning during promotion	No parent zone exists for .internal	Expected for a private namespace; no action
+Sync Host / Clipboard User Service errors after reboot	Per-user services failing at first logon	Non-impacting; no action
+dcdiag /q reported DFSREvent and SystemLog failures	Unrelated event-log errors (Secure Boot update, DCOM timeouts during reboot, KDC lookup) within the 24-hour test window	Health confirmed with targeted tests, services, and shares; entries age out of the test window
+
+**Next:** Set OPNsense DHCP to hand out 10.20.10.10 as the DNS server, create users and security groups, join WS01 to the domain, snapshot WS01.
 
 
 ## 2026-10-28: Environment rebuild, firewall and first workstation
@@ -33,13 +71,4 @@ Newest entries first. Each entry: what I did, what went wrong, what I learned.
 - Current state: DC01 (Windows Server 2025, `lab.local`) and LNX01 (Ubuntu Server) running under VMware Workstation Pro. Windows 11 client being joined to the domain.
 - Next: finish the client domain join, then update the network diagram.
 
-<!-- Template for new entries:
 
-## YYYY-MM-DD: Short title
-- Goal:
-- What I did:
-- What broke / surprised me:
-- Fix / what I learned:
-- Next:
-
--->
