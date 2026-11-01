@@ -62,6 +62,52 @@ Enterprise-style virtual lab for hands-on practice in Windows administration, ne
 
 ## Log
 
+### 2026-10-31: Active Directory structure, by hand
+
+**Objective:** Learn AD administration by building the directory manually in Active Directory Users and Computers (dsa.msc) before using any script.
+
+**Actions**
+- Created the OU tree under the domain root: Corp, with Users, Groups, Admins, Workstations and Disabled Users beneath it, and department OUs under Users.
+- Created user accounts in the department OUs.
+- Created three security groups in Corp\Groups following the AGDLP pattern.
+- Added users to their department groups, and the department global group to the domain local share group.
+- Left the built-in containers untouched.
+
+**Issues and resolutions**
+
+| Issue | Cause | Resolution |
+|---|---|---|
+| Group objects were created as OUs in the Groups container | Chose New > Organizational Unit instead of New > Group | Enabled View > Advanced Features, cleared "Protect object from accidental deletion" on each OU, deleted them, and recreated them as groups |
+
+**Next:** Practice daily tasks (password reset, unlock, disable a user and move to Disabled Users), then build a GPO and join WS01.
+
+---
+
+### 2026-10-30: Certificate authority (DC01)
+
+**Objective:** Add an enterprise root CA so the domain has a PKI for later certificate and AD CS study.
+
+**Actions**
+- Installed the AD CS role on DC01 after domain promotion.
+- Configured an Enterprise Root CA named corp-root-CA, Certification Authority role only, no web enrollment.
+- Selected SHA256 and the longest key length offered.
+
+**Verification**
+- CertSvc running.
+- CA type is Enterprise Root CA.
+- CA certificate and CRL valid.
+- `certutil -ping` succeeds.
+
+**Issues and resolutions**
+
+| Issue | Cause | Resolution |
+|---|---|---|
+| AD CS blocked domain promotion on 10-29 | Role was installed before promotion | Removed on 10-29; reinstalled after promotion today |
+
+**Next:** Set the OPNsense DHCP `dns-server` option to 10.20.10.10, verify the DHCP range, join WS01 to the domain, and confirm corp-root-CA appears in WS01's trusted root certificates.
+
+---
+
 ### 2026-10-29: Domain controller deployment (DC01)
 
 **Objective:** Establish the Active Directory forest and DNS infrastructure for corp.homelab.internal.
